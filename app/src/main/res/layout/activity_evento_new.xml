@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondo_memo"
+    android:padding="16dp"
+    tools:context=".ui.activities.EventoNew">
+
+
+    <ImageView
+        android:id="@+id/idLogo"
+        android:layout_width="match_parent"
+        android:layout_height="175dp"
+        android:layout_marginBottom="15dp"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/idTipoEvento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo Evento:"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="46dp"
+        tools:layout_editor_absoluteY="308dp" />
+    <Spinner
+        android:id="@+id/spinnerTipoEvento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/edittext_border"
+        />
+
+    <TextView
+        android:id="@+id/textViewFechaEvento"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha Evento:" />
+
+    <EditText
+        android:id="@+id/editTextFechaEvento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/edittext_border"
+        android:drawableLeft="@drawable/calendar"
+        android:inputType="text"
+        android:focusableInTouchMode="false"
+        android:onClick="showDatePicker"
+        />
+
+    <TextView
+        android:id="@+id/textViewFechaRecordar"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha Recordar:" />
+
+    <EditText
+        android:id="@+id/editTextFechaRecordar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/edittext_border"
+        android:drawableLeft="@drawable/calendar"
+        android:inputType="text"
+        android:focusableInTouchMode="false"
+        android:onClick="showDatePicker"/>
+
+    <TextView
+        android:id="@+id/textViewPresupuesto"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Presupuesto:" />
+
+    <EditText
+        android:id="@+id/editTextPresupuesto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/edittext_border"
+        android:drawableLeft="@drawable/money"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/btnNuevoEvento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+
+        android:backgroundTint="@color/fondo_memo_botones"
+        android:text="Guardar" />
+
+</LinearLayout>

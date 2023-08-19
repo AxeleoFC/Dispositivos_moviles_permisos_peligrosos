@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "941325953156",
+    "project_id": "memoraid-a836f",
+    "storage_bucket": "memoraid-a836f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941325953156:android:95a99a5ff56eb09647bad1",
+        "android_client_info": {
+          "package_name": "com.example.memoraid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941325953156-e4t8504odermkodej9u3975o7tegrnpg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEP-GStEcKQSJdJ5cZsxGZztDFaR1UyHM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941325953156-e4t8504odermkodej9u3975o7tegrnpg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

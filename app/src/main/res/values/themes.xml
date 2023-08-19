@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Memoraid" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.Memoraid" parent="Base.Theme.Memoraid" />
+    <style name="CustomDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@color/fondo_memo_botones</item>
+        <item name="android:button">@color/fondo_memo_botones</item>
+        <item name="colorControlNormal">@color/fondo_memo_botones</item>
+        <item name="colorControlActivated">@color/fondo_memo_botones</item>
+    </style>
+</resources>
