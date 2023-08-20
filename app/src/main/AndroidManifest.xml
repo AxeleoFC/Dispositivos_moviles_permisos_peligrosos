@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -17,9 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Memoraid"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.activities.IniciarSesion"
+            android:exported="false" />
+
         <receiver
             android:name=".ui.utilities.NotificacionesBroadcast"
             android:enabled="true" />
+
         <activity
             android:name=".ui.activities.DatoEvento"
             android:exported="false" />
@@ -39,7 +44,10 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.IniciarSesion"
+            android:name=".ui.activities.ModificarDatosUsuarioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.DatosUsuarioActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
