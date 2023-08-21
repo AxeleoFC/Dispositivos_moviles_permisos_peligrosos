@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.example.memoraid.data.connections.UserConnectionDB
 import com.example.memoraid.data.dao.UsuariosDAO
+import com.example.memoraid.data.entities.Usuario
 import com.example.memoraid.databinding.ActivityIniciarSesionBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
@@ -26,16 +27,29 @@ class IniciarSesion : AppCompatActivity() {
         setContentView(binding.root)
         usuarioDao = UserConnectionDB.getDatabase(this).usuarioDao()
 
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         binding.buttonIngresar.setOnClickListener {
             val usuario = binding.usuarioID.text.toString()
             val contrasena = binding.contraseniaID.text.toString()
 
             getUsuario(usuario, contrasena) { usuarioEncontrado ->
                 if (usuarioEncontrado) {
-                    val ingresar = Intent(this@IniciarSesion, MenuPrincipal::class.java)
-                    startActivity(ingresar)
+                    sendDatoUsuario(
+                        Usuario(0
+                        ,""
+                        ,""
+                        ,""
+                        ,usuario
+                        ,""
+                        ,""
+                        ,"")
+                    )
                 } else {
-                    showSnackbar("Usuario no registrado")
+                    showSnackbar("Usuario o contraseña incorrecta.")
                 }
             }
         }
@@ -63,5 +77,12 @@ class IniciarSesion : AppCompatActivity() {
                 Log.w("TAG", "Error obteniendo documentos.", exception)
                 callback(false)
             }
+    }
+
+    fun sendDatoUsuario(item: Usuario): Unit {
+        val i = Intent(this, MenuPrincipal::class.java)
+        i.putExtra("usuario", item)
+        startActivity(i)
+
     }
 }

@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.memoraid.R
 import com.example.memoraid.data.connections.UserConnectionDB
 import com.example.memoraid.data.dao.UsuariosDAO
+import com.example.memoraid.data.entities.Usuario
 import com.example.memoraid.data.entities.database.UsuariosDB
 import com.example.memoraid.databinding.ActivityRegistroUsuarioBinding
 import com.google.android.material.snackbar.Snackbar
@@ -35,7 +36,10 @@ class RegistroUsuario : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistroUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
+    override fun onStart() {
+        super.onStart()
         usuarioDao = UserConnectionDB.getDatabase(this).usuarioDao()
         binding.editTextFechaNacimiento.setOnClickListener {
             showDatePicker(binding.editTextFechaNacimiento)
@@ -61,14 +65,19 @@ class RegistroUsuario : AppCompatActivity() {
                 contrasena = contrasena,
                 numeroTelefono = numeroTelefono
             )
-
-            lifecycleScope.launch(Dispatchers.IO) {
-                insertarUsuarios(usuarioObj)
-                //usuarioDao.insertUser(usuarioObj)
-                showSnackbar("Registro exitoso")
-                clearFields()
-                val ingresar = Intent(this@RegistroUsuario, IniciarSesion::class.java)
-                startActivity(ingresar)
+            usuarioExistente(usuario) { usuarioEncontrado ->
+                if (usuarioEncontrado) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        insertarUsuarios(usuarioObj)
+                        //usuarioDao.insertUser(usuarioObj)
+                        showSnackbar("Registro exitoso")
+                        clearFields()
+                        val ingresar = Intent(this@RegistroUsuario, IniciarSesion::class.java)
+                        startActivity(ingresar)
+                    }
+                } else {
+                    showSnackbar("El usuario ingresado ya existe")
+                }
             }
         }
     }
@@ -85,10 +94,6 @@ class RegistroUsuario : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
             }
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     private fun showSnackbar(message: String) {
@@ -120,5 +125,20 @@ class RegistroUsuario : AppCompatActivity() {
             newCalendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
+    }
+
+    private fun usuarioExistente(usuario: String, callback: (Boolean) -> Unit) {
+        val usersCollection = fireBase.collection("usuarios")
+        usersCollection
+            .whereEqualTo("usuario", usuario)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val usuarioEncontrado = querySnapshot.isEmpty
+                callback(usuarioEncontrado)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error obteniendo documentos.", exception)
+                callback(false)
+            }
     }
 }

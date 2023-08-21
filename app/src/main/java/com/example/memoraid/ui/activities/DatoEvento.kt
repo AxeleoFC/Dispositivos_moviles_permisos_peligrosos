@@ -27,16 +27,19 @@ class DatoEvento : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         val item = intent.getParcelableExtra<Evento>("evento")
-        var a=Evento(0, "BabyShower","","",0.0)
         if(item != null){
             binding.datoEvento.text=item.tipo.toString()
             binding.datoFecha.text=item.fecha.toString()
             binding.datoFechaRecordatorio.text=item.fechaRecordar.toString()
             binding.datoPresupuesto.text=item.presupuesto.toString()
-            a=Evento(0,  binding.datoEvento.text.toString(),"","",0.0)
 
             binding.btnBuscarLoca.setOnClickListener {
-                sendDatoItem(a)
+                sendDatoItem(Evento(0
+                    , ""
+                    , binding.datoEvento.text.toString()
+                    ,""
+                    ,""
+                    ,0.0))
             }
         }
     }

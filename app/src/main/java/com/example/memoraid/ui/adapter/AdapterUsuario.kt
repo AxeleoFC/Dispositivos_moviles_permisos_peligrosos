@@ -7,23 +7,23 @@ import com.example.memoraid.data.entities.Evento
 import com.example.memoraid.data.entities.Usuario
 import com.example.memoraid.databinding.ActivityDatosUsuarioBinding
 
-class AdapterUsuario (private var items: Usuario, private var fnClick:(Evento)->Unit):
+class AdapterUsuario (private var items: Usuario, private var fnClick:(Usuario)->Unit):
      RecyclerView.Adapter<AdapterUsuario.UsuarioViewHolder>() {
 
     class UsuarioViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        /*
         private val binding: ActivityDatosUsuarioBinding= ActivityDatosUsuarioBinding.bind(view)
-
         //    solo modificamos el render
         fun render(
-            item: Evento, fnClick:(Evento)->Unit){
-            binding.eventoNum.text = item.tipo
-            binding.fechaEvento.text = item.fecha.toString()
-            itemView.setOnClickListener{
-                fnClick(item)
-            }
-        }*/
+            item: Usuario, fnClick:(Usuario)->Unit){
+
+            binding.usuarioNombre.text=item.nombre
+            binding.usuarioApellido.text=item.apellido
+            binding.usuarFechaN.text=item.fechaNacimiento
+            binding.usuarioNick.text=item.usuario
+            binding.etiquetaEmail.text=item.email
+            binding.usuarioTelefono.text=item.numeroTelefono
+
+        }
     }
 
     override fun onCreateViewHolder(

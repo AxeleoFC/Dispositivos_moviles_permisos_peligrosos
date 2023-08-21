@@ -29,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.memoraid.R
 import com.example.memoraid.data.connections.UserConnectionDB
 import com.example.memoraid.data.dao.EventosDAO
+import com.example.memoraid.data.entities.Usuario
 import com.example.memoraid.data.entities.database.EventoDB
 import com.example.memoraid.data.entities.database.UsuariosDB
 import com.example.memoraid.databinding.ActivityEventoNewBinding
@@ -57,6 +58,13 @@ class EventoNew : AppCompatActivity() {
 
         eventosDAO = UserConnectionDB.getDatabase(this).eventoDao()
 
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val item = intent.getParcelableExtra<Usuario>("usuario")
+        crearSpinnerTipoEvento()
         binding.editTextFechaEvento.setOnClickListener {
             showDatePicker(binding.editTextFechaEvento)
         }
@@ -64,33 +72,12 @@ class EventoNew : AppCompatActivity() {
         binding.editTextFechaRecordar.setOnClickListener {
             showDatePicker(binding.editTextFechaRecordar)
         }
-        val opcionesEvento = arrayOf(""
-            ,"Fiesta"
-            , "Aniversario"
-            , "Cumpleaños"
-            , "BabyShawer"
-            , "Graduación"
-            ,"Cita"
-            , "Otro")
-        val textColors = listOf(
-            Color.parseColor("#000000"), // Sin evento
-            Color.parseColor("#FF5733"), // Fiesta (Naranja)
-            Color.parseColor("#3366FF"), // Aniversario (Azul)
-            Color.parseColor("#000000"), // Cumpleaños (Verde)
-            Color.parseColor("#FF3399"), // BabyShawer (Rosa)
-            Color.parseColor("#FF9900"), // Graduación (Amarillo anaranjado)
-            Color.parseColor("#9933FF"), // Cita (Morado)
-            Color.parseColor("#FF33CC")  // Otro (Rosa oscuro)
-        )
 
 
-        val adapter = ColoredSpinnerAdapter(this, opcionesEvento.toList(), textColors)
-        binding.spinnerTipoEvento.adapter = adapter
-
-        binding.spinnerTipoEvento.adapter = adapter
         binding.btnNuevoEvento.setOnClickListener {
             val eventoObj = EventoDB(
                 0,
+                item?.usuario.toString(),
                 binding.spinnerTipoEvento.selectedItem.toString(),
                 parseStringToDate(binding.editTextFechaEvento.text.toString()).time,
                 parseStringToDate(binding.editTextFechaRecordar.text.toString()).time,
@@ -103,10 +90,32 @@ class EventoNew : AppCompatActivity() {
                 createNotificationChannel()
                 sendNotification(eventoObj)
                 clearFields()
-                val ingresar = Intent(this@EventoNew, MenuPrincipal::class.java)
-                startActivity(ingresar)
+                sendDatoUsuario(item?.usuario.toString(),MenuPrincipal::class.java)
             }
         }
+    }
+
+    private fun crearSpinnerTipoEvento(){
+        val opcionesEvento = arrayOf(""
+            ,"Fiesta"
+            , "Aniversario"
+            , "Cumpleaños"
+            , "BabyShawer"
+            , "Graduación"
+            , "Cita"
+            , "Otro")
+        val textColors = listOf(
+            Color.parseColor("#000000"), // Sin evento
+            Color.parseColor("#FF5733"), // Fiesta (Naranja)
+            Color.parseColor("#3366FF"), // Aniversario (Azul)
+            Color.parseColor("#000000"), // Cumpleaños (Verde)
+            Color.parseColor("#FF3399"), // BabyShawer (Rosa)
+            Color.parseColor("#FF9900"), // Graduación (Amarillo anaranjado)
+            Color.parseColor("#9933FF"), // Cita (Morado)
+            Color.parseColor("#FF33CC")  // Otro (Rosa oscuro)
+        )
+        val adapter = ColoredSpinnerAdapter(this, opcionesEvento.toList(), textColors)
+        binding.spinnerTipoEvento.adapter = adapter
     }
 
     private fun insertarEvento(evento: EventoDB) {
@@ -126,10 +135,6 @@ class EventoNew : AppCompatActivity() {
     private fun parseStringToDate(dateString: String): Date {
         val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         return formatter.parse(dateString) ?: Date()
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     private fun showSnackbar(message: String) {
@@ -207,6 +212,21 @@ class EventoNew : AppCompatActivity() {
 
         val notificacion = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         notificacion.setExact(AlarmManager.RTC_WAKEUP, eventoDB.fechaRecordar, miPending)
+    }
+
+    fun sendDatoUsuario(user: String, activity: Class<*>?): Unit {
+        val usuario=Usuario(0
+            ,""
+            ,""
+            ,""
+            ,user
+            ,""
+            ,""
+            ,"")
+        val i = Intent(this, activity)
+        i.putExtra("usuario", usuario)
+        startActivity(i)
+
     }
 
 }

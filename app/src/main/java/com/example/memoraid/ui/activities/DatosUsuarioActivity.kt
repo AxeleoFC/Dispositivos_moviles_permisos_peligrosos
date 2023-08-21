@@ -28,11 +28,11 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class DatosUsuarioActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityDatosUsuarioBinding
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -44,6 +44,137 @@ class DatosUsuarioActivity : AppCompatActivity() {
     private var currentLocation: Location? = null
 
     private lateinit var locationSettingRequest: LocationSettingsRequest
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        binding = ActivityDatosUsuarioBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, //tipo de localizacion
+            2000
+        )//intervalo de actualizacion
+            // .setMaxUpdates(3) //cuantas veces vamos a solicitar la ubicacion
+            .build()
+
+        client = LocationServices.getSettingsClient(this)
+        locationSettingRequest =
+            LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
+
+        //clase abstracta no se puede instanciar, se esta heredando a la variable los metodos que tiene
+        locationCallback = object : LocationCallback() {
+
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+
+                if (locationResult != null) {
+
+                    locationResult.locations.forEach { location ->
+                        currentLocation = location
+                        Log.d("UCE", "Ubicacion: ${location.latitude}, ${location.longitude}")
+
+                    }
+                }
+            }
+        }
+
+
+        val user = intent.getParcelableExtra<Usuario>("usuario")
+        getUsuario(user?.usuario.toString()) { item ->
+            if (item != null) {
+                showUserData(item)
+                setupModifyButton(item)
+            } else {
+                showSnackbar("Usuario no encontrado")
+            }
+        }
+    }
+
+    private fun showUserData(item: Usuario) {
+        binding.usuarioNombre.text = item.nombre
+        binding.usuarioApellido.text = item.apellido
+        binding.usuarFechaN.text = item.fechaNacimiento
+        binding.usuarioNick.text = item.usuario
+        binding.usuarioEmail.text = item.email
+        binding.usuarioTelefono.text = item.numeroTelefono
+    }
+
+    private fun setupModifyButton(item: Usuario) {
+        val user = Usuario(
+            1,
+            item.nombre,
+            item.apellido,
+            item.fechaNacimiento,
+            item.usuario,
+            item.email,
+            "**",
+            item.numeroTelefono
+        )
+        binding.buttonCambiar.setOnClickListener {
+            sendDatoUsuario(user)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initClass()
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun getUsuario(usuario: String, callback: (Usuario?) -> Unit) {
+        val TAG = "Memoraid datos firebase"
+
+        val usersCollection = fireBase.collection("usuarios")
+        usersCollection
+            .whereEqualTo("usuario", usuario)
+            .get()
+            .addOnSuccessListener { result ->
+                if (!result.isEmpty) {
+                    val document = result.documents[0]
+                    val data = document.data
+                    val user = Usuario(
+                        1,
+                        data?.get("nombre") as? String ?: "",
+                        data?.get("apellido") as? String ?: "",
+                        data?.get("fechaNacimiento") as? String ?: "",
+                        data?.get("usuario") as? String ?: "",
+                        data?.get("email") as? String ?: "",
+                        data?.get("contrasena") as? String ?: "",
+                        data?.get("numeroTelefono") as? String ?: ""
+                    )
+                    Log.d(TAG, user.toString())
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    callback(user)
+                } else {
+                    val u=Usuario(1,"sadasd","asda","fdf"
+                        ,"dsdasd","sadsad","dfdfc","tyyt")
+                    callback(u)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error al obtener el dato", exception)
+                val u=Usuario(1,"sadasd","asda","fdf"
+                    ,"dsdasd","sadsad","dfdfc","tyyt")
+                callback(u)
+            }
+    }
+
+    private fun sendDatoUsuario(item: Usuario) {
+        val intent = Intent(this, ModificarDatosUsuarioActivity::class.java)
+        intent.putExtra("usuario", item)
+        startActivity(intent)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun initClass() {
+        binding.botonLocalizacion.setOnClickListener {
+            locationContract.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
     @SuppressLint("MissingPermission")
     val locationContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -75,11 +206,6 @@ class DatosUsuarioActivity : AppCompatActivity() {
 
                 val task = fusedLocationProviderClient.lastLocation
 
-
-
-
-
-
                 task.addOnSuccessListener { location ->
 
 
@@ -109,16 +235,6 @@ class DatosUsuarioActivity : AppCompatActivity() {
                     setCancelable(false)
                 }.show()
 
-//                task.addOnFailureListener { ex ->
-//                    if (ex is ResolvableApiException) {
-//                        ex.startResolutionForResult(
-//                            this@MainActivity,
-//                            LocationSettingsStatusCodes.RESOLUTION_REQUIRED
-//                        )
-//                    }
-//                }
-
-
             }
 
             shouldShowRequestPermissionRationale(
@@ -140,113 +256,5 @@ class DatosUsuarioActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
-        binding = ActivityDatosUsuarioBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY, //tipo de localizacion
-            2000
-        )//intervalo de actualizacion
-            // .setMaxUpdates(3) //cuantas veces vamos a solicitar la ubicacion
-            .build()
-
-        client = LocationServices.getSettingsClient(this)
-        locationSettingRequest =
-            LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
-
-        //clase abstracta no se puede instanciar, se esta heredando a la variable los metodos que tiene
-        locationCallback = object : LocationCallback() {
-
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-
-                if (locationResult != null) {
-
-                    locationResult.locations.forEach { location ->
-                        currentLocation = location
-                        Log.d("UCE", "Ubicacion: ${location.latitude}, ${location.longitude}")
-
-                    }
-                }
-            }
-        }
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        initClass()
-
-        val user = Usuario(
-            1,
-            binding.usuarioNombre.toString(),
-            binding.usuarioApellido.toString(),
-            binding.usuarFechaN.toString(),
-            binding.usuarioNick.toString(),
-            binding.etiquetaEmail.toString(),
-            "**",
-            binding.usuarioTelefono.toString()
-        )
-        binding.buttonCambiar.setOnClickListener {
-            sendDatoUsuario(user)
-        }
-
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun initClass() {
-
-
-
-
-
-        binding.botonLocalizacion.setOnClickListener {
-            locationContract.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-
-
-
-        }
-
-    }
-
-
-    private fun getUsuario(callback: (UsuariosDB) -> Unit) {
-        val TAG = "Memoraid"
-        val eventosList = ArrayList<Evento>()
-        fireBase.collection("usuario")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    val data = document.data
-                    val user = UsuariosDB(
-                        1,
-                        data["nombre"] as String,
-                        data["apellido"] as String,
-                        data["fechaNacimiento"] as String,
-                        data["usuario"] as String,
-                        data["email"] as String,
-                        data["contrasena"] as String,
-                        data["numeroTelefono"] as String
-                    )
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                    callback(user)
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
-    }
-
-    fun sendDatoUsuario(item: Usuario): Unit {
-        val i = Intent(this, ModificarDatosUsuarioActivity::class.java)
-        i.putExtra("usuario", item)
-        startActivity(i)
-
     }
 }
