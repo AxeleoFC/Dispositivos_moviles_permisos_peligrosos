@@ -43,12 +43,20 @@ class MenuPrincipal : AppCompatActivity() {
 
         if (item != null){
             binding.buttonEventos.setOnClickListener {
-                sendDatoUsuario(item?.usuario.toString(),RLocalActivity::class.java)
+                sendDatoItem(Evento(0
+                    , ""
+                    ,"Fiesta"
+                    ,""
+                    ,""
+                    ,0.0))
             }
+          
 
             binding.btnNuevoEvento.setOnClickListener {
                 sendDatoUsuario(item?.usuario.toString(),EventoNew::class.java)
             }
+
+
 
             binding.datePicker2.setOnClickListener {
                 showDatePickerDialog()
@@ -139,6 +147,12 @@ class MenuPrincipal : AppCompatActivity() {
         startActivity(i)
 
     }
+    fun sendDatoItem(item: Evento):Unit {
+        val i = Intent(this, RLocalActivity::class.java)
+        i.putExtra("tipoLocal",item)
+        startActivity(i)
+
+    }
     fun sendDatoUsuario(user: String, activity: Class<*>?): Unit {
         val usuario=Usuario(0
         ,""
@@ -198,6 +212,23 @@ class MenuPrincipal : AppCompatActivity() {
             command.contains("Quiero un evento") -> {
                 sendDatoUsuario(item?.usuario.toString(),EventoNew::class.java)
             }
+            command.contains("Lugares disponibles") -> {
+                val intent = Intent(this, RLocalActivity::class.java)
+                startActivity(intent)
+            }
+            command.contains("lugares ") -> {
+                val intent = Intent(this, RLocalActivity::class.java)
+                startActivity(intent)
+            }
+            command.contains("Dame un lugar") -> {
+                val intent = Intent(this, RLocalActivity::class.java)
+                startActivity(intent)
+            }
+            command.contains("Dame un lugar disponible") -> {
+                val intent = Intent(this, RLocalActivity::class.java)
+                startActivity(intent)
+            }
+
 
             else -> {
 
