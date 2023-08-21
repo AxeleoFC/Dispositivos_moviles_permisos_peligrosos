@@ -32,6 +32,19 @@
         tools:layout_editor_absoluteX="86dp" />
 
     <Button
+        android:id="@+id/voiceCommandButton"
+        android:layout_width="36dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/ic_microphone"
+        android:contentDescription="Botón de comando por voz"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btnNuevoEvento"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker2" />
+
+    <Button
         android:id="@+id/btnNuevoEvento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
