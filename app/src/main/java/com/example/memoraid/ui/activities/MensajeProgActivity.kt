@@ -84,6 +84,7 @@ class MensajeProgActivity : AppCompatActivity() {
         }
     }
 
+
     @SuppressLint("MissingPermission")
     private fun enviarMensajeProgramado() {
         // Configurar el tiempo de envío programado (por ejemplo, 5 segundos después de la ejecución)
