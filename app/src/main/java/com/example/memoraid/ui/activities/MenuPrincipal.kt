@@ -43,7 +43,12 @@ class MenuPrincipal : AppCompatActivity() {
 
         if (item != null){
             binding.buttonEventos.setOnClickListener {
-                sendDatoUsuario(item?.usuario.toString(),RLocalActivity::class.java)
+                sendDatoItem(Evento(0
+                    , ""
+                    , "Fiesta"
+                    ,""
+                    ,""
+                    ,0.0))
             }
 
             binding.btnNuevoEvento.setOnClickListener {
@@ -72,6 +77,12 @@ class MenuPrincipal : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun sendDatoItem(item: Evento):Unit {
+        val i = Intent(this, RLocalActivity::class.java)
+        i.putExtra("tipoLocal",item)
+        startActivity(i)
     }
     private fun getData(item:Usuario) {
         val adapter = EventosAdapter(
@@ -198,7 +209,38 @@ class MenuPrincipal : AppCompatActivity() {
             command.contains("Quiero un evento") -> {
                 sendDatoUsuario(item?.usuario.toString(),EventoNew::class.java)
             }
-
+            command.contains("Lugares disponibles") -> {
+                sendDatoItem(Evento(0
+                    , ""
+                    , "Fiesta"
+                    ,""
+                    ,""
+                    ,0.0))
+            }
+            command.contains("lugares ") -> {
+                sendDatoItem(Evento(0
+                    , ""
+                    , "Fiesta"
+                    ,""
+                    ,""
+                    ,0.0))
+            }
+            command.contains("Dame un lugar") -> {
+                sendDatoItem(Evento(0
+                    , ""
+                    , "Fiesta"
+                    ,""
+                    ,""
+                    ,0.0))
+            }
+            command.contains("Dame un lugar disponible") -> {
+                sendDatoItem(Evento(0
+                    , ""
+                    , "Fiesta"
+                    ,""
+                    ,""
+                    ,0.0))
+            }
             else -> {
 
                 showToast("Comando de voz no reconocido")
