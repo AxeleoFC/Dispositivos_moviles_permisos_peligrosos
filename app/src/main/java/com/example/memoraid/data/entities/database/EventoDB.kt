@@ -14,6 +14,7 @@ import java.util.Locale
 data class EventoDB(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
+    val usuarioID:String,
     val tipo: String,
     val fecha: Long,
     val fechaRecordar: Long,

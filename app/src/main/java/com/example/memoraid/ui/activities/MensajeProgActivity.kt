@@ -23,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 import java.util.Date
 
-
 class MensajeProgActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMensajeProgBinding
@@ -41,7 +40,7 @@ class MensajeProgActivity : AppCompatActivity() {
         val mensajeContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             when (isGranted) {
                 true -> {
-                enviarMensajeProgramado()
+                    enviarMensajeProgramado()
                 }
                 false -> {
                     Snackbar.make(
@@ -54,10 +53,37 @@ class MensajeProgActivity : AppCompatActivity() {
             }
         }
 
+        // En tu función onCreate o donde manejas la solicitud de permisos:
         binding.btn.setOnClickListener {
-            mensajeContract.launch(android.Manifest.permission.SEND_SMS)
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                enviarMensajeProgramado()
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.SEND_SMS, android.Manifest.permission.READ_PHONE_STATE),
+                    REQUEST_SMS_PERMISSION
+                )
+            }
         }
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_SMS_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                enviarMensajeProgramado()
+            } else {
+                Snackbar.make(
+                    binding.texto,
+                    "Permiso denegado",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
 
     @SuppressLint("MissingPermission")
     private fun enviarMensajeProgramado() {
@@ -93,6 +119,3 @@ class MensajeProgActivity : AppCompatActivity() {
     }
 
 }
-
-
-

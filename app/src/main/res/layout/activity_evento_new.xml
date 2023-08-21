@@ -88,7 +88,7 @@
         android:layout_marginBottom="15dp"
         android:background="@drawable/edittext_border"
         android:drawableLeft="@drawable/money"
-        android:inputType="text" />
+        android:inputType="numberDecimal" />
 
     <Button
         android:id="@+id/btnNuevoEvento"

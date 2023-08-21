@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Evento(
     val id: Int,
+    val usuarioID:String,
     val tipo: String,
     val fecha: String,
     val fechaRecordar: String,

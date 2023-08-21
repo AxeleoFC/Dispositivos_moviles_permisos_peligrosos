@@ -6,7 +6,6 @@ import android.content.Intent
 import android.telephony.SmsManager
 import android.widget.Toast
 
-
 class MiReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent) {
