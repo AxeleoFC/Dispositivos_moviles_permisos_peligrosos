@@ -39,6 +39,11 @@ class DatoEvento : AppCompatActivity() {
                 sendDatoItem(a)
             }
         }
+
+        binding.btnMensaje.setOnClickListener {
+            val intent= Intent(this,MensajeProgActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 
