@@ -33,62 +33,22 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class DatosUsuarioActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityDatosUsuarioBinding
-
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
     private val fireBase = Firebase.firestore
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
     private lateinit var client: SettingsClient
     private var currentLocation: Location? = null
-
     private lateinit var locationSettingRequest: LocationSettingsRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         binding = ActivityDatosUsuarioBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        locationRequest = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY, //tipo de localizacion
-            2000
-        )//intervalo de actualizacion
-            // .setMaxUpdates(3) //cuantas veces vamos a solicitar la ubicacion
-            .build()
-
         client = LocationServices.getSettingsClient(this)
-        locationSettingRequest =
-            LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
-
-        //clase abstracta no se puede instanciar, se esta heredando a la variable los metodos que tiene
-        locationCallback = object : LocationCallback() {
-
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-
-                if (locationResult != null) {
-
-                    locationResult.locations.forEach { location ->
-                        currentLocation = location
-                        Log.d("UCE", "Ubicacion: ${location.latitude}, ${location.longitude}")
-
-                    }
-                }
-            }
-        }
-
-
-        val user = intent.getParcelableExtra<Usuario>("usuario")
-        getUsuario(user?.usuario.toString()) { item ->
-            if (item != null) {
-                showUserData(item)
-                setupModifyButton(item)
-            } else {
-                showSnackbar("Usuario no encontrado")
-            }
-        }
+        setContentView(binding.root)
     }
 
     private fun showUserData(item: Usuario) {
@@ -118,6 +78,38 @@ class DatosUsuarioActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, //tipo de localizacion
+            2000
+        )//intervalo de actualizacion
+            // .setMaxUpdates(3) //cuantas veces vamos a solicitar la ubicacion
+            .build()
+        locationSettingRequest =
+            LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
+        //clase abstracta no se puede instanciar, se esta heredando a la variable los metodos que tiene
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+
+                if (locationResult != null) {
+
+                    locationResult.locations.forEach { location ->
+                        currentLocation = location
+                        Log.d("UCE", "Ubicacion: ${location.latitude}, ${location.longitude}")
+
+                    }
+                }
+            }
+        }
+        val user = intent.getParcelableExtra<Usuario>("usuario")
+        getUsuario(user?.usuario.toString()) { item ->
+            if (item != null) {
+                showUserData(item)
+                setupModifyButton(item)
+            } else {
+                showSnackbar("Usuario no encontrado")
+            }
+        }
         initClass()
     }
 
@@ -127,7 +119,6 @@ class DatosUsuarioActivity : AppCompatActivity() {
 
     private fun getUsuario(usuario: String, callback: (Usuario?) -> Unit) {
         val TAG = "Memoraid datos firebase"
-
         val usersCollection = fireBase.collection("usuarios")
         usersCollection
             .whereEqualTo("usuario", usuario)
@@ -150,16 +141,12 @@ class DatosUsuarioActivity : AppCompatActivity() {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     callback(user)
                 } else {
-                    val u=Usuario(1,"sadasd","asda","fdf"
-                        ,"dsdasd","sadsad","dfdfc","tyyt")
-                    callback(u)
+                    callback(null)
                 }
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error al obtener el dato", exception)
-                val u=Usuario(1,"sadasd","asda","fdf"
-                    ,"dsdasd","sadsad","dfdfc","tyyt")
-                callback(u)
+                callback(null)
             }
     }
 
@@ -192,7 +179,6 @@ class DatosUsuarioActivity : AppCompatActivity() {
                             )
                         }
                     }
-
                     addOnFailureListener() { ex ->
                         if (ex is ResolvableApiException) {
                             ex.startResolutionForResult(
@@ -203,22 +189,15 @@ class DatosUsuarioActivity : AppCompatActivity() {
 
                     }
                 }
-
                 val task = fusedLocationProviderClient.lastLocation
-
                 task.addOnSuccessListener { location ->
-
-
                     //actualizar la localizacion
                     fusedLocationProviderClient.requestLocationUpdates(
                         locationRequest,
                         locationCallback,
                         Looper.getMainLooper()
                     )
-
-
                 }
-
                 val alert = AlertDialog.Builder(
                     this
                 )
@@ -226,7 +205,6 @@ class DatosUsuarioActivity : AppCompatActivity() {
                     //setTitle("Notificacion")
                     setMessage("Memoraid accedio a la ubicacion del dispositivo.")
                     setPositiveButton("OK") { dialog, id ->
-
                         val i = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
 //                        startActivity(i)
 //                        dialog.dismiss()
@@ -234,9 +212,7 @@ class DatosUsuarioActivity : AppCompatActivity() {
 
                     setCancelable(false)
                 }.show()
-
             }
-
             shouldShowRequestPermissionRationale(
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) -> {
@@ -246,7 +222,6 @@ class DatosUsuarioActivity : AppCompatActivity() {
                     Snackbar.LENGTH_LONG
                 ).show()
             }
-
             false -> {
                 Snackbar.make(
                     binding.etiquetaEmail,
@@ -254,7 +229,6 @@ class DatosUsuarioActivity : AppCompatActivity() {
                     Snackbar.LENGTH_LONG
                 ).show()
             }
-
         }
     }
 }

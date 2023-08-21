@@ -133,23 +133,3 @@ class MenuPrincipal : AppCompatActivity() {
 
     }
 }
-
-
-
-/*
-*
-*
-* private fun getMarkedDaysFromFirestore(): Array<Calendar> {
-        val markedDaysList = ArrayList<Calendar>()
-
-        getEventos { eventos ->
-            for (evento in eventos) {
-                val formattedFecha = evento.fecha
-                val calendar = convertStringToCalendar(formattedFecha)
-                calendar?.let { markedDaysList.add(it) }
-            }
-        }
-
-        return markedDaysList.toTypedArray()
-    }
-    * */

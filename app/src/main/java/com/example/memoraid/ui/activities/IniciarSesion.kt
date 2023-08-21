@@ -26,8 +26,6 @@ class IniciarSesion : AppCompatActivity() {
         binding = ActivityIniciarSesionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         usuarioDao = UserConnectionDB.getDatabase(this).usuarioDao()
-
-
     }
 
     override fun onStart() {
@@ -35,7 +33,6 @@ class IniciarSesion : AppCompatActivity() {
         binding.buttonIngresar.setOnClickListener {
             val usuario = binding.usuarioID.text.toString()
             val contrasena = binding.contraseniaID.text.toString()
-
             getUsuario(usuario, contrasena) { usuarioEncontrado ->
                 if (usuarioEncontrado) {
                     sendDatoUsuario(
@@ -53,7 +50,6 @@ class IniciarSesion : AppCompatActivity() {
                 }
             }
         }
-
         binding.buttonRegistrar.setOnClickListener {
             startActivity(Intent(this, RegistroUsuario::class.java))
         }

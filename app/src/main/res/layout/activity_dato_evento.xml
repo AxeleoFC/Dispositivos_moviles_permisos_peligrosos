@@ -88,5 +88,12 @@
         android:backgroundTint="@color/fondo_memo_botones"
         android:text="Comprobar locales" />
 
+    <Button
+        android:id="@+id/btnMensaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#61C1E8"
+        android:text="Enviar Mensaje Programado" />
 
 </LinearLayout>

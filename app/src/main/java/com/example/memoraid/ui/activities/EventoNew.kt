@@ -55,10 +55,7 @@ class EventoNew : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEventoNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         eventosDAO = UserConnectionDB.getDatabase(this).eventoDao()
-
-
     }
 
     override fun onStart() {
@@ -119,9 +116,7 @@ class EventoNew : AppCompatActivity() {
     }
 
     private fun insertarEvento(evento: EventoDB) {
-        // Create a new user with a first, middle, and last name
         val TAG = "Memoraid"
-        // Add a new document with a generated ID
         fireBase.collection("eventos")
             .add(evento)
             .addOnSuccessListener { documentReference ->

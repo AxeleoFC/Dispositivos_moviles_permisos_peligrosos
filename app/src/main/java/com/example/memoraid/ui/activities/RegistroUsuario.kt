@@ -53,7 +53,6 @@ class RegistroUsuario : AppCompatActivity() {
             val email = binding.editTextEmail.text.toString()
             val contrasena = binding.editTextContrasena.text.toString()
             val numeroTelefono = binding.editTextNumeroTelefono.text.toString()
-
             // Crear una instancia de UsuariosDB con los datos recopilados
             val usuarioObj = UsuariosDB(
                 id = 0, // El id se generará automáticamente en la base de datos

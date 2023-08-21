@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memoraid.data.entities.DatosTienda
 import com.example.memoraid.data.entities.Evento
 import com.example.memoraid.databinding.ActivityRlocalBinding
-import com.example.memoraid.ui.adapter.AdapterItem
-import com.example.memoraid.logic.ListaTiendas
 import com.example.memoraid.ui.adapter.AdapterItemTipo
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -30,10 +28,7 @@ class RLocalActivity : AppCompatActivity() {
         setContentView(binding.root)
         if(item != null){
             getData(item?.tipo.toString())
-        }else{
-            getData("BabyShower")
         }
-
     }
 
     private fun getData(tipo:String ) {
@@ -54,7 +49,6 @@ class RLocalActivity : AppCompatActivity() {
     private fun getLocalPorTipo(tipoLocal: String, callback: (ArrayList<DatosTienda>) -> Unit) {
         val TAG = "Memoraid Local"
         val localList = ArrayList<DatosTienda>()
-
         fireBase.collection("tiendas")
             .whereEqualTo("tipoLocal", tipoLocal) // Aplicar el filtro por tipo de evento
             .get()
